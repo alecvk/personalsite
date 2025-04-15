@@ -146,6 +146,16 @@
             animation: fadeInDown 1s ease-in-out;
         }
 
+        .tagline {
+            font-size: 24px;
+            color: var(--highlight-color);
+            margin-bottom: 20px;
+            font-family: 'Roboto Mono', monospace;
+            animation: fadeInUp 1s ease-in-out 0.5s;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
         .header-content p {
             font-size: 28px;
             margin-bottom: 40px;
@@ -371,8 +381,9 @@
         .timeline-item::before {
             content: '';
             position: absolute;
-            top: 20px;
-            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            right: -12px;
             width: 16px;
             height: 16px;
             background: var(--accent-color);
@@ -381,7 +392,8 @@
         }
 
         .timeline-item:nth-child(even)::before {
-            left: -8px;
+            left: -12px;
+            right: auto;
         }
 
         .timeline-item-content {
@@ -389,6 +401,32 @@
             padding: 20px;
             border-radius: 8px;
             position: relative;
+        }
+
+        /* Experience section animations */
+        .timeline-item {
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: all 0.8s ease-out;
+            will-change: transform, opacity;
+        }
+
+        .timeline-item:nth-child(even) {
+            transform: translateX(100px);
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item.hidden {
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+
+        .timeline-item:nth-child(even).hidden {
+            transform: translateX(100px);
         }
 
         /* Gallery */
@@ -531,6 +569,113 @@
                 display: none;
             }
         }
+
+        /* Gallery Section - Slideshow Style */
+        .gallery {
+            padding: 100px 20px;
+            background: var(--primary-color);
+        }
+
+        .slideshow-container {
+            max-width: 1200px;
+            height: 600px;
+            position: relative;
+            margin: auto;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Navigation arrows */
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            background: rgba(0,0,0,0.3);
+            text-decoration: none;
+        }
+
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover, .next:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        /* Dots/bullets/indicators */
+        .dots-container {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .dot {
+            cursor: pointer;
+            height: 12px;
+            width: 12px;
+            margin: 0 5px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+        }
+
+        .dot.active, .dot:hover {
+            background-color: var(--highlight-color);
+        }
+
+        /* LinkedIn button style */
+        .linkedin-fixed {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--accent-color);
+            color: var(--highlight-color);
+            width: 60px;  /* Increased from 50px */
+            height: 60px; /* Increased from 50px */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;  /* Increased from 24px */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .linkedin-fixed:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            background: var(--highlight-color);
+            color: var(--accent-color);
+        }
     </style>
 </head>
 <body>
@@ -561,18 +706,15 @@
             <h1>Hi, I'm Alec</h1>
             <p>An Olympic Hopeful 470 Sailor &amp; UC Berkeley Software Engineer</p>
             
-            <!-- Social Icons -->
-            <div class="social-icons">
-                <a href="https://www.linkedin.com/in/alec-van-kerckhove" target="_blank"><i class="fab fa-linkedin"></i></a>
-                <a href="https://github.com/alecvk" target="_blank"><i class="fab fa-github"></i></a>
-                <!-- Add more icons as desired -->
-            </div>
-            
             <!-- Learn More Button with Added Class -->
             <a href="#about" class="learn-more">Learn More</a>
-            
         </div>
     </header>
+
+    <!-- Fixed LinkedIn Button -->
+    <a href="https://www.linkedin.com/in/alec-van-kerckhove" target="_blank" class="linkedin-fixed">
+        <i class="fab fa-linkedin"></i>
+    </a>
 
     <!-- About Me Section -->
     <section id="about" class="about">
@@ -582,19 +724,7 @@
             <div class="about-text">
                 <p>Welcome to my personal website! I'm Alec, a passionate sailor competing in the 470 class and a dedicated software engineer specializing in Computer Science.</p>
                 <p>With a strong background in Computer Science from UC Berkeley, I have been fortunate to combine my love for the sea with my technical skills to create innovative solutions both on and off the water.</p>
-                <h3>Skills</h3>
-                <div class="skills">
-                    <div class="skill">Python</div>
-                    <div class="skill">Java</div>
-                    <div class="skill">SQL</div>
-                    <div class="skill">Scheme</div>
-                    <div class="skill">LaTeX</div>
-                    <div class="skill">JavaScript</div>
-                    <div class="skill">HTML</div>
-                    <div class="skill">CSS</div>
-                    <div class="skill">C</div>
-                    <!-- Add more skills as needed -->
-                </div>
+                <p>Beyond my technical expertise, I'm deeply interested in management consulting and private equity, where I aim to leverage my analytical skills and business acumen to develop value add strategies.</p>
             </div>
         </div>
     </section>
@@ -610,7 +740,7 @@
                     <h4>AsparaGlue, Berkeley, California</h4>
                     <p>May 2023 - Aug 2023</p>
                     <ul>
-                        <li>Conducted 30+ interviews with top medical experts to understand unmet needs and how to position AsparaGlue’s offering.</li>
+                        <li>Conducted 30+ interviews with top medical experts to understand unmet needs and how to position AsparaGlue's offering.</li>
                         <li>Consulted with VCs, investors, and medical experts to determine the market entry strategy and positioning with the CEO.</li>
                         <li>Designed and built a basic website to generate leads and presence online.</li>
                     </ul>
@@ -624,7 +754,7 @@
                     <p>May 2023 - June 2023</p>
                     <ul>
                         <li>Assisted in analyzing sailing performance data collected during races and training sessions to identify areas for improvement, optimize sailing strategies, and enhance the performance of the F50 catamaran.</li>
-                        <li>Made necessary adjustments to F50’s before and after sailing (Shore Team).</li>
+                        <li>Made necessary adjustments to F50's before and after sailing (Shore Team).</li>
                     </ul>
                 </div>
             </div>
@@ -666,6 +796,17 @@
                     </ul>
                 </div>
             </div>
+            <!-- Experience Item -->
+            <div class="timeline-item">
+                <div class="timeline-item-content">
+                    <h3>Associate Consultant Intern</h3>
+                    <h4>Bain & Company, San Francisco, California</h4>
+                    <p>June 2025</p>
+                    <ul>
+                        <li>Incoming Associate Consultant Intern for Summer 2025.</li>
+                    </ul>
+                </div>
+            </div>
             <!-- Add more timeline items as needed -->
         </div>
     </section>
@@ -701,29 +842,37 @@
 
     <!-- Gallery Section -->
     <section id="gallery" class="gallery">
-        <h2 class="section-title">Sailing...</h2>
-        <div class="grid-container">
-            <div class="card gallery-card">
-                <a href="images/sailing-photo1.png" data-lightbox="sailing-gallery">
-                    <img src="images/Screen Shot 2022-09-17 at 6.08.47 PM.png" alt="Sailing Photo 1">
-                </a>
+        <h2 class="section-title">Sailing Gallery</h2>
+        <div class="slideshow-container">
+            <div class="slide active">
+                <img src="images/Screen Shot 2022-09-17 at 6.08.47 PM.png" alt="470 Class Racing">
             </div>
-            
-            <!-- Add more sailing photos as needed -->
+            <div class="slide">
+                <img src="images/IMG_6922.jpeg" alt="Sailing Competition">
+            </div>
+            <div class="slide">
+                <img src="images/IMG_4300.jpeg" alt="Sailing Competition">
+            </div>
+            <div class="slide">
+                <img src="images/sailing-photo3.png" alt="Team Practice">
+            </div>
+
+            <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+            <a class="next" onclick="changeSlide(1)">&#10095;</a>
+        </div>
+        <div class="dots-container">
+            <span class="dot active" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+            <span class="dot" onclick="currentSlide(4)"></span>
         </div>
     </section>
-
 
     <!-- Contact Section -->
     <section id="contact" class="contact">
         <h2 class="section-title">Contact Me</h2>
         <p>I'm always open to discussing new projects or opportunities. Feel free to reach out!</p>
         <p>Email: <a href="mailto:alecjrvankerckhove@gmail.com">alecjrvankerckhove@gmail.com</a></p>
-        <div class="social-icons">
-            <a href="https://www.linkedin.com/in/alec-van-kerckhove" target="_blank"><i class="fab fa-linkedin"></i></a>
-            <a href="https://github.com/alecvk" target="_blank"><i class="fab fa-github"></i></a>
-            <!-- Add more icons as desired -->
-        </div>
         <p>&copy; 2024 Alec Van Kerckhove. All rights reserved.</p>
     </section>
 
@@ -838,6 +987,80 @@
 
         backToTop.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Slideshow functionality
+        let slideIndex = 1;
+        let slideTimer;
+
+        function showSlides(n) {
+            const slides = document.getElementsByClassName("slide");
+            const dots = document.getElementsByClassName("dot");
+            
+            if (n > slides.length) slideIndex = 1;
+            if (n < 1) slideIndex = slides.length;
+
+            // Hide all slides
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove("active");
+                dots[i].classList.remove("active");
+            }
+
+            // Show current slide
+            slides[slideIndex-1].classList.add("active");
+            dots[slideIndex-1].classList.add("active");
+
+            // Reset timer
+            clearTimeout(slideTimer);
+            slideTimer = setTimeout(() => changeSlide(1), 5000); // Auto advance every 5 seconds
+        }
+
+        function changeSlide(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        // Initialize slideshow
+        showSlides(slideIndex);
+
+        // Experience section animations
+        function checkVisible(element) {
+            const rect = element.getBoundingClientRect();
+            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+            return {
+                isVisible: rect.top <= windowHeight * 0.75 && rect.bottom >= windowHeight * 0.25,
+                isAbove: rect.bottom < windowHeight * 0.25
+            };
+        }
+
+        function handleScroll() {
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                const visibility = checkVisible(item);
+                if (visibility.isVisible) {
+                    item.classList.add('visible');
+                    item.classList.remove('hidden');
+                } else if (visibility.isAbove) {
+                    item.classList.remove('visible');
+                    item.classList.add('hidden');
+                }
+            });
+        }
+
+        // Initial check for visible elements
+        handleScroll();
+
+        // Add scroll event listener with throttling for better performance
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (!scrollTimeout) {
+                scrollTimeout = setTimeout(() => {
+                    handleScroll();
+                    scrollTimeout = null;
+                }, 10);
+            }
         });
     </script>
 </body>
