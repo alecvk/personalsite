@@ -626,14 +626,14 @@
 
     /* TIMELINE */
 
-        .timeline {
-            position: relative;
-      margin-top: 0.5rem;
-      padding-left: 1rem;
+    .timeline {
+      position: relative;
+      margin-top: 2rem;
+      padding: 2rem 0 2.5rem;
     }
 
     .timeline-group + .timeline-group {
-      margin-top: 2.8rem;
+      margin-top: 3rem;
     }
 
     .timeline-heading {
@@ -642,62 +642,118 @@
       letter-spacing: 0.18em;
       color: var(--muted);
       margin-bottom: 1rem;
-        }
+    }
 
-        .timeline::before {
+    .timeline::before {
       content: "";
-            position: absolute;
-      left: 0.25rem;
-      top: 0.1rem;
-            bottom: 0;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
       width: 2px;
-      background: linear-gradient(to bottom, rgba(148, 163, 184, 0.5), rgba(148, 163, 184, 0.18));
-        }
+      background: linear-gradient(to bottom, rgba(148, 163, 184, 0.7), rgba(148, 163, 184, 0.15));
+      opacity: 0.8;
+    }
 
-        .timeline-item {
-            position: relative;
-      padding-left: 1.3rem;
-      margin-bottom: 1.4rem;
+    .timeline-item {
+      position: relative;
+      width: min(480px, calc(50% - 1.25rem));
+      padding: 1.25rem 1.5rem;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(3, 6, 18, 0.92);
+      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.65);
+      margin-bottom: 2.4rem;
+      opacity: 0;
+      transform: translateY(60px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      top: calc(1.25rem + 4px);
+      width: 34px;
+      height: 2px;
+      background: rgba(148, 163, 184, 0.35);
+    }
+
+    .timeline-item:nth-child(odd) {
+      margin-right: auto;
+      text-align: right;
+      padding-right: 2.4rem;
+    }
+
+    .timeline-item:nth-child(odd)::before {
+      right: -34px;
+    }
+
+    .timeline-item:nth-child(even) {
+      margin-left: auto;
+      padding-left: 2.4rem;
+    }
+
+    .timeline-item:nth-child(even)::before {
+      left: -34px;
     }
 
     .timeline-dot {
       position: absolute;
-      left: -0.04rem;
-      top: 0.35rem;
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      border: 2px solid var(--accent);
+      top: 1.15rem;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
       background: #020617;
+      box-shadow: 0 0 0 4px rgba(79, 209, 197, 0.12);
+      z-index: 1;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-dot {
+      right: -8px;
+    }
+
+    .timeline-item:nth-child(even) .timeline-dot {
+      left: -8px;
     }
 
     .timeline-meta {
-      font-size: 0.76rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.16em;
       color: var(--muted);
     }
 
+    .timeline-item:nth-child(odd) .timeline-meta,
+    .timeline-item:nth-child(odd) .timeline-title,
+    .timeline-item:nth-child(odd) .timeline-org,
+    .timeline-item:nth-child(odd) .timeline-body {
+      text-align: right;
+    }
+
     .timeline-title {
       font-family: "Space Grotesk";
-      font-size: 0.95rem;
-      margin-top: 0.2rem;
-    }
-
-    .timeline-org {
-      font-size: 0.82rem;
-      color: #9ca3af;
-      margin-top: 0.05rem;
-    }
-
-    .timeline-body {
-      font-size: 0.83rem;
-      color: #e5e7eb;
+      font-size: 1rem;
       margin-top: 0.25rem;
     }
 
-    .timeline-logo {
-      display: none;
+    .timeline-org {
+      font-size: 0.85rem;
+      color: #9ca3af;
+      margin-top: 0.15rem;
+    }
+
+    .timeline-body {
+      font-size: 0.84rem;
+      color: #e5e7eb;
+      margin-top: 0.4rem;
+      line-height: 1.5;
     }
 
     /* SAILING VISUALS */
@@ -873,6 +929,38 @@
 
       .about-photo-slide {
         grid-template-columns: minmax(0, 1fr);
+      }
+
+      .timeline::before {
+        left: 12px;
+        transform: none;
+      }
+
+      .timeline-item,
+      .timeline-item:nth-child(even),
+      .timeline-item:nth-child(odd) {
+        width: 100%;
+        margin: 0 0 1.8rem 0;
+        text-align: left;
+        padding: 1.2rem 1.25rem 1.2rem 2.5rem;
+      }
+
+      .timeline-item::before {
+        display: none;
+      }
+
+      .timeline-item .timeline-meta,
+      .timeline-item .timeline-title,
+      .timeline-item .timeline-org,
+      .timeline-item .timeline-body {
+        text-align: left;
+      }
+
+      .timeline-dot,
+      .timeline-item:nth-child(even) .timeline-dot,
+      .timeline-item:nth-child(odd) .timeline-dot {
+        left: 0;
+        right: auto;
       }
 
       .sailing-slider {
@@ -1480,6 +1568,31 @@
         resize();
         initParticles();
       });
+    })();
+
+    // Timeline reveal on scroll
+    (function() {
+      const items = document.querySelectorAll(".timeline .timeline-item");
+      if (!items.length) return;
+
+      if (!("IntersectionObserver" in window)) {
+        items.forEach(item => item.classList.add("visible"));
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.3 }
+      );
+
+      items.forEach(item => observer.observe(item));
     })();
 
     // Sailing slider (auto-play)
