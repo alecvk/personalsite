@@ -26,6 +26,8 @@
       --gold: #ffd36a;
       --text: #f9fafb;
       --muted: #9ca3af;
+      --hero-photo-active: url("images/header-background.jpg");
+      --hero-gradient: linear-gradient(120deg, rgba(15, 23, 42, 0.45), rgba(0, 0, 0, 0.35));
       --nav-h: 72px;
       --radius-lg: 18px;
       --shadow-soft: 0 22px 60px rgba(0, 0, 0, 0.75);
@@ -170,14 +172,19 @@
     .hero-bg {
             position: absolute;
       inset: 0;
-      /* put cal.jpg in the same folder as this HTML */
       background-image:
-        linear-gradient(120deg, rgba(15, 23, 42, 0.45), rgba(0, 0, 0, 0.35)),
-        url("cal.jpg");
+        var(--hero-gradient),
+        var(--hero-photo-active);
       background-size: cover;
       background-position: center;
       filter: saturate(1.1);
       z-index: 0;
+      transition: opacity 1.2s ease-in-out;
+    }
+
+    .hero-bg-buffer {
+      opacity: 0;
+      pointer-events: none;
     }
 
     .hero-overlay-vignette {
@@ -1063,7 +1070,7 @@
         <div>
           <h1 class="hero-title">Hi, I'm Alec.</h1>
           <p class="hero-subtitle">
-            <span>Olympic hopeful 470 sailor</span> &amp; CS student at UC&nbsp;Berkeley.
+            Computer Science student at UC&nbsp;Berkeley &amp; <span>Olympic hopeful 470 sailor.</span> 
           </p>
           <div class="hero-tagline">
             Startups · Software · Competitive sailor
@@ -1427,6 +1434,50 @@
         hamburger.classList.remove("active");
             });
         });
+
+    // Hero background rotation with smooth crossfade
+    (() => {
+      const hero = document.querySelector("header");
+      const base = document.querySelector(".hero-bg");
+      if (!hero || !base) return;
+
+      const photos = [
+        "images/header-background.jpg",
+        "images/241125_ODPCamp1_MiamiNovember_Chenard-37.jpg"
+      ];
+      const GRADIENT_FALLBACK = "linear-gradient(120deg, rgba(15, 23, 42, 0.45), rgba(0, 0, 0, 0.35))";
+      const intervalMs = 12000;
+
+      const gradient = (getComputedStyle(document.documentElement).getPropertyValue("--hero-gradient") || "").trim() || GRADIENT_FALLBACK;
+
+      const buffer = base.cloneNode(false);
+      buffer.classList.add("hero-bg-buffer");
+      hero.insertBefore(buffer, base.nextSibling);
+
+      let current = 0;
+
+      const setBackground = (el, photo) => {
+        el.style.backgroundImage = `${gradient}, url("${photo}")`;
+      };
+
+      setBackground(base, photos[current]);
+      setBackground(buffer, photos[current]);
+      buffer.style.opacity = "0";
+
+      const swap = () => {
+        const next = (current + 1) % photos.length;
+        setBackground(buffer, photos[next]);
+        buffer.style.opacity = "1";
+
+        setTimeout(() => {
+          setBackground(base, photos[next]);
+          buffer.style.opacity = "0";
+          current = next;
+        }, 1200);
+      };
+
+      setInterval(swap, intervalMs);
+    })();
 
     // Hero mathy canvas (interactive particle network that reacts to cursor)
     (function() {
